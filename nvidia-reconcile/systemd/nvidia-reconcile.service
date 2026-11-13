@@ -1,0 +1,15 @@
+[Unit]
+Description=Reconcile loaded NVIDIA module with installed driver after unattended updates
+# akmods rebuilds the module for a new kernel at boot; wait for it to finish.
+After=akmods.service
+Wants=akmods.service
+# Only meaningful once an nvidia module is loaded.
+ConditionPathExists=/proc/driver/nvidia/version
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=/usr/local/sbin/nvidia-reconcile.sh
+
+[Install]
+WantedBy=multi-user.target
